@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "chatroom-client",
-  "version": "0.1.0",
-  "identifier": "com.g.chatroom-client",
+  "productName": "Claude聊天室",
+  "version": "1.0.0",
+  "identifier": "com.claude.chatroom",
   "build": {
     "frontendDist": "../src"
   },
@@ -27,13 +27,23 @@
   },
   "bundle": {
     "active": true,
-    "targets": "all",
+    "targets": "nsis",
     "icon": [
       "icons/32x32.png",
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns",
       "icons/icon.ico"
-    ]
+    ],
+    "resources": [
+      "../../../chat.sh",
+      "../../../server.js"
+    ],
+    "nsis": {
+      "installerIcon": "icons/icon.ico",
+      "displayLanguageSelector": false,
+      "languages": ["SimpChinese"],
+      "installMode": "both"
+    }
   }
 }
