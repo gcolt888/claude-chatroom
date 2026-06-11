@@ -29,7 +29,7 @@ chat_join() {
   local name="$1"
   local msg="$2"
   if [ -z "$name" ]; then
-    echo "❌ 用法: chat_join <名字> [初始消息]"
+    echo "用法: chat_join <名字> [初始消息]"
     return 1
   fi
 
@@ -37,14 +37,45 @@ chat_join() {
   echo "name=$name" > "$CHAT_STATE"
   echo "server=$CHAT_SERVER" >> "$CHAT_STATE"
 
-  # 向服务器注册（用 Python 确保 UTF-8 编码）
-  if [ -n "$msg" ]; then
-    _chat_post "$CHAT_SERVER/join" "{\"id\":\"$name\",\"message\":\"$msg\"}" > /dev/null
-    echo "🟢 $name 已加入聊天室 (带话题)"
-  else
-    _chat_post "$CHAT_SERVER/join" "{\"id\":\"$name\"}" > /dev/null
-    echo "🟢 $name 已加入聊天室"
+  # 一次 Python 调用完成：注册 + 解析 + 显示
+  python -c "
+import urllib.request, json, sys, io
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
+server = sys.argv[1]
+name = sys.argv[2]
+msg = sys.argv[3] if len(sys.argv) > 3 else ''
+
+body = {'id': name}
+if msg:
+    body['message'] = msg
+
+data = json.dumps(body).encode('utf-8')
+req = urllib.request.Request(server + '/join', data=data, headers={'Content-Type': 'application/json'}, method='POST')
+try:
+    resp = urllib.request.urlopen(req)
+    result = json.loads(resp.read().decode('utf-8'))
+except Exception as e:
+    print('JOIN_FAILED: ' + str(e))
+    sys.exit(1)
+
+msgs = result.get('messages', [])
+if not msgs:
+    print('NO_HISTORY')
+else:
+    print('GOT_MESSAGES:' + str(len(msgs)))
+    for m in msgs:
+        print('  ' + m['from'] + ': ' + m['text'])
+" "$CHAT_SERVER" "$name" "$msg" 2>&1
+  local _rc=$?
+
+  if [ $_rc -ne 0 ]; then
+    echo "加入聊天室失败"
+    return 1
   fi
+
+  echo "$name 已加入聊天室${msg:+ (带话题)}"
 }
 
 # ============================================================

@@ -227,14 +227,26 @@ async function handle(req, res) {
       // 游标跳过自己发的开场白
       cursors[id] = Number(lastRow.id);
     } else {
-      // 响应方游标从 0 开始，能看到所有历史消息
-      if (cursors[id] === undefined) cursors[id] = 0;
+      // 响应方每次加入都重置游标，确保能看到所有历史消息
+      cursors[id] = 0;
     }
 
     const { cnt } = countMsgs.get();
     broadcastSSE('online', { users: Object.keys(online) });
     console.log(`🟢 ${id} 加入聊天室${body.message ? ' (带话题)' : ''}`);
-    return json(res, 200, { ok: true, messageCount: cnt });
+
+    // 拉取该用户的未读消息
+    const unreadMsgs = getMsgsAfter.all(cursors[id] ?? 0);
+    const messages = unreadMsgs.map(m => ({
+      ...m,
+      mentions: m.mentions ? JSON.parse(m.mentions) : [],
+      metadata: m.metadata ? JSON.parse(m.metadata) : {}
+    }));
+    if (messages.length > 0) {
+      cursors[id] = messages[messages.length - 1].id;
+    }
+
+    return json(res, 200, { ok: true, messageCount: cnt, messages });
   }
 
   // ---- POST /leave ----
