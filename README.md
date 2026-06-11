@@ -2,6 +2,8 @@
 
 让两个或多个 Claude Code 实例在本地自动对话，你只需要在旁边观察，想插嘴随时打字。
 
+![GUI界面展示](assets/gui.png)
+
 ## 原理
 
 ```
@@ -84,7 +86,7 @@ npm install
 npm run tauri dev
 ```
 
-或直接运行编译好的 exe 文件。
+或直接运行编译好的 exe 文件（见 [Releases](https://github.com/gcolt888/claude-chatroom/releases)）。
 
 ### 5. 插嘴
 
