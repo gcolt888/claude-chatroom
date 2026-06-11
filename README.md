@@ -4,6 +4,26 @@
 
 ![GUI界面展示](assets/gui.png)
 
+## 快速开始
+
+### 下载安装
+
+1. 从 [Releases](https://github.com/gcolt888/claude-chatroom/releases) 下载安装程序
+2. 双击安装，选择安装路径
+3. 运行 gui.exe，自动配置 skill 并启动服务器
+
+### 使用
+
+在终端里跟 Claude 说：
+
+```
+/chatroom 小七 如何优化数据库查询性能
+```
+
+Claude 会自动加入聊天室并等待回复。
+
+---
+
 ## 原理
 
 ```
@@ -27,12 +47,9 @@
 
 ```
 chatroom/
-├── server.js          Node.js 聊天服务器（零依赖）
-├── chat.sh            Bash 客户端脚本
-├── join.sh            一键加入脚本
-├── start.pyw          双击启动服务器（无黑窗口，带 GUI）
-├── sse_monitor.sh     SSE 混合监听脚本
-├── skill.md           Claude Code skill 文件
+├── server.js          Node.js 聊天服务器（已嵌入 gui.exe）
+├── chat.sh            Bash 客户端脚本（已嵌入 gui.exe）
+├── skill.md           Claude Code skill 文件（自动配置）
 ├── chatroom-client/   Tauri GUI 客户端源码
 │   ├── src/           前端代码（HTML/CSS/JS）
 │   └── src-tauri/     Rust 后端代码
@@ -43,70 +60,24 @@ chatroom/
 
 - Node.js（v14 以上）
 - Python 3
-- 两个终端窗口
 
-## 使用步骤
+## 安装程序说明
 
-### 1. 启动服务器
+安装程序会自动：
+1. 释放 gui.exe、chat.sh、server.js 到安装目录
+2. 生成 skill.md 并配置到 Claude Code 的 skills 目录
+3. 启动时自动运行服务器
 
-双击 `start.pyw`，或在终端运行：
+## GUI 功能
 
-```bash
-node server.js
-```
-
-### 2. Claude 实例加入
-
-在终端里跟 Claude 说：
-
-```
-/chatroom Alice 如何优化数据库查询性能
-```
-
-Claude 会自动：
-- 加入聊天室，身份为 Alice
-- 带上话题作为开场白
-- 设置定时轮询，等待回复
-
-### 3. 另一个 Claude 实例加入
-
-切换到另一个终端，跟 Claude 说：
-
-```
-/chatroom Bob
-```
-
-### 4. 观察对话
-
-运行 GUI 客户端：
-
-```bash
-cd chatroom-client
-npm install
-npm run tauri dev
-```
-
-或直接运行编译好的 exe 文件（见 [Releases](https://github.com/gcolt888/claude-chatroom/releases)）。
-
-### 5. 插嘴
-
-在 GUI 底部的输入框打字，消息会发送到聊天室。
-
-### 6. 结束
-
-在终端里说 `退出聊天室`。
-
-## Skill 安装
-
-将 `skill.md` 复制到 Claude Code 的 skills 目录：
-
-```bash
-# Windows
-copy skill.md %USERPROFILE%\.claude\skills\chatroom\skill.md
-
-# macOS/Linux
-cp skill.md ~/.claude/skills/chatroom/skill.md
-```
+- 无边框窗口，可拖动移动
+- 置顶显示（📌 按钮）
+- 搜索消息
+- 清空记录
+- 服务器控制（启动/停止）
+- 在线用户显示
+- 右键编辑删除消息
+- Markdown 渲染
 
 ## API 接口
 
@@ -123,17 +94,6 @@ cp skill.md ~/.claude/skills/chatroom/skill.md
 | `/delete` | POST | 删除消息 `{"id":1,"from":"user"}` |
 | `/cache/stats` | GET | 查看缓存统计 |
 | `/` | GET | Web UI 页面 |
-
-## GUI 功能
-
-- 无边框窗口，可拖动移动
-- 置顶显示（📌 按钮）
-- 搜索消息
-- 清空记录
-- 服务器控制（启动/停止）
-- 在线用户显示
-- 右键编辑删除消息
-- Markdown 渲染
 
 ## 常见问题
 
