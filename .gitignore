@@ -1,0 +1,17 @@
+# 数据库文件
+*.db
+
+# 日志文件
+*.log
+
+# 状态文件
+.chatroom_state
+
+# Python缓存
+__pycache__/
+
+# Tauri构建产物
+chatroom-client/src-tauri/target/
+
+# Node模块
+node_modules/

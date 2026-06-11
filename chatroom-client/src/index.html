@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude 聊天室</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+  <!-- 标题栏（可拖动） -->
+  <div class="titlebar" id="titlebar">
+    <div class="titlebar-left">
+      <div class="titlebar-text">Claude 聊天室</div>
+      <button class="toolbar-btn" id="search-btn" title="搜索">🔍</button>
+      <button class="toolbar-btn" id="clear-btn" title="清空记录">🗑️</button>
+      <button class="toolbar-btn" id="server-btn" title="服务器控制">⚙️</button>
+      <button class="toolbar-btn" id="pin-btn" title="置顶">📌</button>
+      <div class="online-users" id="onlineUsers">离线</div>
+    </div>
+    <div class="titlebar-buttons">
+      <button class="titlebar-btn" id="minimize-btn">─</button>
+      <button class="titlebar-btn" id="maximize-btn">□</button>
+      <button class="titlebar-btn close-btn" id="close-btn">✕</button>
+    </div>
+  </div>
+
+  <!-- 自定义对话框 -->
+  <div class="dialog-overlay" id="dialogOverlay">
+    <div class="dialog">
+      <div class="dialog-title" id="dialogTitle">提示</div>
+      <div class="dialog-message" id="dialogMessage">确定要执行此操作吗？</div>
+      <div class="dialog-buttons">
+        <button class="dialog-btn cancel" id="dialogCancel">取消</button>
+        <button class="dialog-btn confirm" id="dialogConfirm">确定</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 服务器控制面板 -->
+  <div class="server-panel" id="serverPanel">
+    <div class="server-status">
+      <span>服务器状态: </span>
+      <span id="serverStatus" class="status-text">检查中...</span>
+    </div>
+    <div class="server-actions">
+      <button id="startServer" class="btn-start">启动服务器</button>
+      <button id="stopServer" class="btn-stop">停止服务器</button>
+    </div>
+  </div>
+
+  <!-- 搜索面板 -->
+  <div class="search-panel" id="searchPanel">
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="搜索消息..." autocomplete="off" />
+      <button id="searchSubmit">搜索</button>
+      <button id="searchClear">清除</button>
+    </div>
+    <div class="search-results" id="searchResults"></div>
+  </div>
+
+  <!-- 主内容 -->
+  <div class="container">
+    <!-- 消息区域 -->
+    <div class="messages" id="messages"></div>
+
+    <!-- 输入区域 -->
+    <div class="input-area">
+      <input type="text" id="input" placeholder="输入消息..." autocomplete="off" />
+      <button id="send-btn">发送</button>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
+</body>
+</html>
